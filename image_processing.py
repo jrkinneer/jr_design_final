@@ -9,7 +9,7 @@ hsv = cv.cvtColor(original, cv.COLOR_BGR2HSV)
 dim = hsv.shape
 
 laser = []
-
+#asdlfkja test
 for y in range(dim[0]):
     for x in range(dim[1]):
         temp = hsv[y,x]
