@@ -1,5 +1,7 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
+import serial as serial
+import time
 
 #define find laser spot function
 def find_laser(threshold_a, threshold_b, img, dim):
@@ -33,9 +35,41 @@ def find_center(spot):
     
     return center
     
-            
+#establish serial connection
+ser = serial.Serial('COM4')
+      
 #start infinite while loop
-
+while(1):
+    res = ser.read()
 #look for serial input signaling image was captured
-
-#if 
+    if (res == "0x30"):
+        #load in image
+        IMG_PATH = r"C:\Users\jrkin\Downloads\laser.png" #need to change this path for actual use
+        original = cv.imread(IMG_PATH)
+        hsv = cv.cvtColor(original, cv.COLOR_BGR2HSV)
+        dim = hsv.shape
+        
+        thresh_a = 250
+        thresh_b = 200
+        
+        spot = []
+        #runs find_laser
+        while (1):
+            spot = find_laser(thresh_a, thresh_b, hsv, dim)
+            #if list of spot coordinates is small enough loop is broke
+            if (len(spot) < 100):
+                break
+            else:
+                #if list is too long, threshold values are increased to 
+                    #try and isolate the laser spots
+                if (thresh_a < 255):
+                    thresh_a += 1
+                if (thresh_b < 255):
+                    thresh_b += 5
+        
+        #finds center of the laser
+        center = find_center(spot)
+        
+        ser.write("some indicator")
+        time.sleep(.01)
+        ser.write(center)
