@@ -1,6 +1,21 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 
+def find_center(spot):
+    # print(spot)
+    center = [0,0]
+    sum_x = 0
+    sum_y = 0
+    for cordinate in spot:
+        print(cordinate[1], " ", cordinate[0])
+        sum_x += cordinate[1]
+        sum_y += cordinate[0]
+    length = len(spot)
+    center[0] = sum_y/length
+    center[1] = sum_x/length
+    
+    return center
+
 #IMG_PATH = r"C:\Users\jrkin\Downloads\nedubla.jpg"
 IMG_PATH = r"C:\Users\jrkin\Downloads\laser3.png"
 original = cv.imread(IMG_PATH)
@@ -18,28 +33,10 @@ for y in range(dim[0]):
         if (a > 250 and b > 215):
             coord = [y,x]
             laser.append(coord)
-
-print(dim[0]," ", dim[1])
-print(laser)
-
+print(len(laser))
+# print(dim[0]," ", dim[1])
+# print(laser)
+# print("\n\n")
+print(find_center(laser))
 plt.imshow(hsv)
 plt.show()
-
-#print(cv.minMaxLoc(original))
-
-# green = convertedArray[:,:,1]
-# print(cv.minMaxLoc(green))
-# plt.imshow(green)
-# plt.show()
-# cv.imshow('green', green)
-# cv.waitKey(0)
-# cv.destroyAllWindows()
-
-#max by rgb to grayscale
-# gray = cv.cvtColor(convertedArray, cv.COLOR_RGB2GRAY)
-# print(cv.minMaxLoc(gray))
-# plt.imshow(gray)
-# plt.show()
-# cv.imshow('gray', gray)
-# cv.waitKey(0)
-# cv.destroyAllWindows()
