@@ -70,6 +70,13 @@ while(1):
         #finds center of the laser
         center = find_center(spot)
         
+        #indicates to arduino that center is ready to be sent
         ser.write("some indicator")
         time.sleep(.01)
-        ser.write(center)
+        ser.write(center) #sends center to arduino
+        
+        #maybe add a confirmation signal to be sent back from arduino 
+            #and if no signal is recieved send center back
+            # n number of times and then give up if still no confirmation
+            
+        
