@@ -36,47 +36,56 @@ def find_center(spot):
     return center
     
 #establish serial connection
-ser = serial.Serial('COM4')
+# ser = serial.Serial('COM3')
       
 #start infinite while loop
 while(1):
-    res = ser.read()
-#look for serial input signaling image was captured
-    if (res == "0x30"):
-        #load in image
-        IMG_PATH = r"C:\Users\jrkin\Downloads\laser.png" #need to change this path for actual use
-        original = cv.imread(IMG_PATH)
-        hsv = cv.cvtColor(original, cv.COLOR_BGR2HSV)
-        dim = hsv.shape
-        
-        thresh_a = 250
-        thresh_b = 200
-        
-        spot = []
-        #runs find_laser
-        while (1):
-            spot = find_laser(thresh_a, thresh_b, hsv, dim)
-            #if list of spot coordinates is small enough loop is broke
-            if (len(spot) < 100):
-                break
-            else:
-                #if list is too long, threshold values are increased to 
-                    #try and isolate the laser spots
-                if (thresh_a < 255):
-                    thresh_a += 1
-                if (thresh_b < 255):
-                    thresh_b += 5
-        
-        #finds center of the laser
-        center = find_center(spot)
-        
-        #indicates to arduino that center is ready to be sent
-        ser.write("some indicator")
-        time.sleep(.01)
-        ser.write(center) #sends center to arduino
-        
-        #maybe add a confirmation signal to be sent back from arduino 
-            #and if no signal is recieved send center back
-            # n number of times and then give up if still no confirmation
+    # ready = False
+    
+    # while not ready:
+    #     with open('filename.txt') as f:
+    #         for line in f:
+    #             pass
+    #         last_line = line
+    #     if last_line == "ready to find dot":
+    #         ready = True
             
+    #if we get this far we know we can load the laser image
+    #load in image
+    IMG_PATH = r"C:/Users/jrkin/laser5.jpg" #need to change this path for actual use
+    original = cv.imread(IMG_PATH)
+    #hsv = cv.cvtColor(original, cv.COLOR_BGR2HSV)
+    dim = original.shape
+    
+    plt.imshow(original)
+    plt.show()
+    thresh_a = 250
+    thresh_b = 200
         
+    spot = []
+    #runs find_laser
+    iteration = 1
+    while (1):
+        print("running find laser iteration: ", iteration)
+        iteration += 1
+        spot = find_laser(thresh_a, thresh_b, original, dim)
+        #if list of spot coordinates is small enough loop is broke
+        if (len(spot) < 100):
+            break
+        else:
+            #if list is too long, threshold values are increased to 
+            #try and isolate the laser spots
+            if (thresh_a < 255):
+                thresh_a += 1
+            if (thresh_b < 255):
+                thresh_b += 5
+        
+    #finds center of the laser
+    center = find_center(spot)
+    print(center)
+    
+    #shows image
+    
+    plt.imshow(original)
+    plt.show()
+    break
